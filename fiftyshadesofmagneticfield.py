@@ -7,14 +7,20 @@ import matplotlib.animation as animation
 width, height = 500, 300
 
 # Tworzenie gradientu - imitacja pola magnetycznego
-x = np.linspace(0, 1, width)
-y = np.linspace(0, 1, height)
+x = np.linspace(-1, 1, width)
+y = np.linspace(-1, 1, height)
 X, Y = np.meshgrid(x, y)
-B_field = (1 - X ** 2 - Y ** 2)  # Przykładowe pole magnetyczne
+
+# Obliczanie odległości od środka (0,0)
+distance = np.sqrt(X**2 + Y**2)
+
+# Tworzenie gradientu (intensywność malejąca z odległości)
+B_field = np.exp(-distance**2 * 5)  # Używamy funkcji eksponencjalnej, żeby pole malało szybciej
 
 # Normalizacja do zakresu 0-255
 B_field = (B_field - np.min(B_field)) / (np.max(B_field) - np.min(B_field)) * 255
 B_field = B_field.astype(np.uint8)
+
 
 # Zapis obrazu
 image = Image.fromarray(B_field)
@@ -28,7 +34,7 @@ B_field = np.array(image) / 255.0  # Normalizacja pola do zakresu [0,1]
 q = 1.0  # Ładunek cząstki
 m = 1.0  # Masa cząstki
 dt = 0.1  # Krok czasowy
-steps = 500000  # Ilość kroków symulacji
+steps = 1000  # Ilość kroków symulacji (zmniejszono do testów)
 
 # Początkowe warunki cząstki
 x, y = 250, 150  # Startowa pozycja (środek obrazu)
@@ -47,8 +53,8 @@ ax.set_title("Ruch cząstki w polu magnetycznym")
 
 # Funkcja inicjująca animację
 def init():
-    line.set_data([], [])
-    dot.set_data([], [])  # Hide dot at start
+    line.set_data([x_traj[0]], [y_traj[0]])
+    dot.set_data([x],[y])  # Hide dot at start
     return line, dot
 
 # Funkcja aktualizująca animację
@@ -81,10 +87,8 @@ def update(frame):
 
     return line, dot
 
-
-
-# Tworzenie animacji
-ani = animation.FuncAnimation(fig, update, frames=5000000, blit =True, interval=dt * 1000)
+# Tworzenie animacji z mniejszą ilością kroków
+ani = animation.FuncAnimation(fig, update, frames=1000, init_func=init, blit=True, interval=dt * 1000)
 
 # Wyświetlenie animacji
 plt.show()
