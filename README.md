@@ -1,4 +1,5 @@
 ---Projekt FOGT semestr zimowy 2024/25---
+
 ''Wpływ siły Lorentza na trajektorię lotu naładowanej czątki''
 
 Autorki: Paulina Lasoń, Zofia Cygarowska
