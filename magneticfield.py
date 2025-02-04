@@ -2,32 +2,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
 import matplotlib.animation as animation
+from scipy.ndimage import gaussian_filter
 
 # Rozmiar obrazu
 width, height = 500, 300
 
-# Tworzenie gradientu - imitacja pola magnetycznego
-x = np.linspace(-1, 1, width)
-y = np.linspace(-1, 1, height)
-X, Y = np.meshgrid(x, y)
-
-# Obliczanie odległości od środka (0,0)
-distance = np.sqrt(X**2 + Y**2)
-
-# Tworzenie gradientu (intensywność malejąca z odległości)
-B_field = np.exp(-distance**2 * 5)  # Używamy funkcji eksponencjalnej, żeby pole malało szybciej
-
-# Normalizacja do zakresu 0-255
-B_field = (B_field - np.min(B_field)) / (np.max(B_field) - np.min(B_field)) * 255
-B_field = B_field.astype(np.uint8)
-
-
-# Zapis obrazu
-image = Image.fromarray(B_field)
-image.save("generated_magnetic_field.png")
 
 # Wczytanie wygenerowanego obrazu pola magnetycznego
-image = Image.open("generated_magnetic_field.png").convert("L")
+image = Image.open("magnetic_field_cat.png").convert("L")
 B_field = np.array(image) / 255.0  # Normalizacja pola do zakresu [0,1]
 
 # Parametry symulacji
